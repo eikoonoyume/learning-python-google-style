@@ -207,10 +207,10 @@ while my_variable < 10:
     if n < 1:
       return 0
     i = 1
-    sum = 
-    while :
+    sum = 0 
+    while i <= n:
       sum = sum + i
-      i = 
+      i = i + 1
     return sum
   print(sum_of_integers(3))
   # output: 6
@@ -219,15 +219,15 @@ while my_variable < 10:
   print(sum_of_integers(5))
   # output: 15
 
-  # My Guess
-  def sum_of_integers(n):
-    if n < 1:
-      return 0
-    i = 1
-    sum = 0 # or sum = n + (n-1, 0) or (n-=1)
-    while n >= 1:
-      sum = sum + i
-      i = i + 1
+  # The variable sum should be an accumulator, so when you are in the initial state, it should not have any value. It should be 0.
+  # When you look at the while condition, n is a constant value.
+  # Thus, n >= 1 is always true. The loop will never finish.
+  # The while condition must take into consideration that the variable can be altered, the case in question being
+  # the variable i that was initialized as 1
+  # i > 1 won't work because all numbers more than 1 just makes an infinite loop
+  # i >= 1 results in the same infinite loop
+  # i > n, the n being all the numbers needed to sum up the number (meaning if it was 5, it stands for 1+2+3+4+5 all of these numbers), is the condition that is FALSE. I need the true statement.
+  # Thus, n and anything less than n. i <= n
 
   # Example
   def multiplication_table(number):
