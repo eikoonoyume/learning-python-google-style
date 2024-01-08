@@ -261,4 +261,346 @@ while my_variable < 10:
   # 8x2=16
   # 8x3=24
   
-    
+  # For Loops
+  for x in range(5):
+    print(x)
+  # output:
+  # 0
+  # 1
+  # 2
+  # 3
+  # 4
+
+  # Example
+  friends = ['Taylor', 'Alex', 'Pat', 'Eli']
+    for friend in friends:
+      print("Hi " + friend)
+      
+  # Example
+  values = [23, 52, 59, 37, 48]
+  sum = 0 # must start at 0
+  length = 0 # must start at 0
+  for value in values:
+    sum + value
+    length += 1 # must increment to keep the loop going
+  print("Total sum: " + str(sum) + " - Average: " + str(sum/length))
+
+  # Example
+  product = 1
+  for n in range(1,10):
+    product = product * n
+  print(product)
+  # must start with 1 and not 0, if it was zero, the multiplication will result in 0
+
+  # Example
+  def to_celcius(x):
+    return (x-32)*5/9
+  for x in range(0,101,10):
+    print(x, to_celcius(x))
+  # output:
+  # 0 -17.77777777
+  # 10 -12.22222
+  # 20 -6.6666666
+  # etc
+
+  # Example
+  for n in range(1, 5, 6):
+    print(n)
+  # output:
+  # 1
+
+  # Example
+  for n in range(0,11,2):
+    print(n)
+  # output:
+  # 0
+  # 2
+  # 4
+  # 6
+  # 8
+  # 10
+
+  # Example
+  for number in range(2,7+1) # add 1 to keep the 7 in the range
+    print(number*3)
+  # output:
+  # 6
+  # 9
+  # 12
+  # 15
+  # 18
+  # 21
+
+  # Example
+  for x in range(2, -2, -1): # -1 will decrement backwards
+    print(x)
+  # output:
+  # 2
+  # 1
+  # 0
+  # -1
+
+  # Nested for loops
+  for left in range(7):
+    for right in range(left, 7):
+      print("[" + str(left) + "| *the pipe symbol*" + str(right) + "]", end=" ") # keep this in mind when you need to add spaces
+    print()
+  # output:
+  # [0|0] [0|1] [0|2] [0|3] [0|4] [0|5] [0|6]
+  # [1|1] [1|2] [1|3] [1|4] [1|5] [1|6]
+  # [2|2] [2|3] [2|4] [2|5] [2|6]
+  # [3|3] [3|4] [3|5] [3|6]
+  # [4|4] [4|5] [4|6]
+  # [5|5] [5|6]
+  # [6|6]
+
+  # Example
+  teams = [ 'Dragons', 'Wolves', 'Pandas', 'Unicorns']
+  for home_team in teams:
+    for away_team in teams:
+      if home_team != away_team:
+        print(home_team + " vs " + away_team)
+
+  # output:
+  # Dragons vs Wolves
+  # Dragons vs Pandas
+  # Dragons vs Unicorns
+  # Wolves vs Dragons
+  # Wolves vs Pandas
+  # Wolves vs Unicorns
+  # Pandas vs Dragons
+  # Pandas vs Wolves
+  # Pandas vs Unicorns
+  # Unicorns vs Dragons
+  # Unicorns vs Wolves
+  # Unicorns vs Pandas
+
+  # Strings and Loops
+  greeting = "Hello"
+  for c in greeting:
+    print("The next character is: ", c)
+  # output:
+  # The next character is: H 
+  # The next character is: e 
+  # The next character is: l 
+  # The next character is: l 
+  # The next character is: o
+
+  # Example
+  for i in range(0, 3):
+    print("The next value is:" i)
+  # output:
+  # The next value is 0 
+  # The next value is 1 
+  # The next value is 2
+
+
+  # Loop Examples
+  greeting = 'Hello'
+  for char in greeting:
+    print(char)
+  # output:
+  # H
+  # e 
+  # l 
+  # l 
+  # o
+
+  # Example
+  for i in range(len(greeting)):
+    print(i)
+  # output:
+  # 0
+  # 1
+  # 2
+  # 3
+  # 4
+
+  # Example
+  greeting = 'Hello'
+  index = 0
+  while index < len(greeting):
+    print(greeting[index])
+    index += 1
+  # output:
+  # H
+  # e
+  # l 
+  # l 
+  # o
+
+  # Example
+  numbers = [1, 2, 3, 4, 5]
+  squared_numbers = [x ** 2 for x in numbers]
+  print(squared_numbers)
+  # output: [1, 4, 9, 16, 25]
+
+  # Example
+  string1 = "Greetings, Earthlings"
+  print(string1[0])
+  print(string1[4:8])
+  print(string1[11:])
+  print(string1[:5})
+  print(string1[-10:])
+  print(string1[55:])
+  print(string1[0::2})
+  print(string1[::-1])
+  # output:
+  # G
+  # ting
+  # Earthlings
+  # Greet
+  # Earthlings
+  # *doesn't print because placement 55 is empty space*
+  # Getns atlns
+  # sgnilhtraE ,sgniteerG
+  
+  # Example
+  print("Hello" + " " + "world")
+  # output: Hello world
+
+  # Example
+  greeting = ["Hello", "world"]
+  print(" ".join(greetings))
+  # output: Hello world
+
+  # Example
+  name = "Alice"
+  print("Hello, " + name + "!")
+  # output: Hello, Alice!
+
+  # Example
+  def format_phone(phonenum):
+    area_code = "(" + phonenum[:3] + ")"
+    exchange = phonenum[3:6]
+    line = phonenum[-4:]
+    return area_code + " " + exchange + "-" + line
+  print(format_phone("2025551212"))
+  # output: (202) 555-1212
+
+  # Common Errors in Loops
+  for x in 25:
+    print(x)
+  # this is a single element, and for loops are for multiple elements
+  # can change by writing ' for x in range(25): '
+
+  # Example
+  def greet_friends(friends):
+    for friend in friends:
+      print("Hi " + friend)
+  greet_friends(['Taylor', 'Luisa', 'Jamaal', 'Eli'])
+  # output:
+  # Hi Taylor
+  # Hi Luisa
+  # Hi Jamaal
+  # Hi Eli
+
+  # Version 2
+  def greet_friends(friends):
+    for friend in friends:
+      print("Hi " + friend)
+  greet_friends("Barry") # a list was not defined, need a list even if with only one element
+  # output:
+  # Hi B
+  # Hi a
+  # Hi r
+  # Hi r
+  # Hi y
+
+  # Recursion
+  def factorial(n):
+    if n<2: # conditional block
+      return 1
+    return n*factorial(n-1) # recursive case for what doesn't apply to condition
+
+    # Example
+    def factorial(n):
+      print("Factorial called with " + str(n))
+      if n<2:
+        print("Returning 1")
+        return 1
+      result = n*factorial(n-1)
+      print("Returning " + str(result) + " for factorial of " + str(n))
+      return result
+
+      factorial(4)
+      # output:
+      # Factorial called with 4
+      # Factorial called with 3
+      # Factorial called with 2
+      # Factorial called with 1
+      # Returning 1
+      # Returning 2 for factorial of 2
+      # Returning 6 for factorial of 3
+      # Returning 24 for factorial of 4
+      # 24
+      
+  # Example
+  # The function sum_positive_numbers should return the sum of all positive numbers between the number n received and 1. For example, when n is 3 it should return 1+2+3=6, and when n is 5 it should return 1+2+3+4+5=15. Fill in the gaps to make this work
+    def sum_positive_numbers(n):
+      if n<1:
+        return 0
+      return n + sum_positive_numbers(n-1)
+    print(sum_positive_numbers(3))
+    print(sum_positive_numbers(5))
+  # output
+  # 6
+  # 15
+
+  # Example
+  def factorial(n):
+    if n<2:
+      return 1
+    return n*factorial(n-1)
+  factorial(1000)
+  # Error because 1000 is beyond maximum recursive call limit, use recursive for smaller things
+
+  # Example
+  # Fill in the blanks to make the is_power_of function return whether the number is a power of the given base. Note: base is assumed to be a positive number. Tip: for functions that return a boolean value, you can return the result of a comparison.
+  def is_power_of(number, base):
+    if number<base:
+      return number == 1
+    return is_power_of(number/base, base)
+  print(is_power_of(8,2))
+  print(is_power_of(64,4))
+  print(is_power_of(70,10))
+  # output:
+  # True
+  # True
+  # False
+
+  # Example
+  # In the provided code, the count_users function uses recursion to count the number of users that belong to a group within a company's system. It does this by iterating through each member of a group, and if a member is another group, it recursively calls count_users to count the users within that subgroup. However, there is a bug in the code! Can you spot the problem and fix it?
+    def count_users(group):
+      count = 0
+      for member in get_members(group):
+        count += 1
+        if count_users(member) --> # change to if is_group(member) to count people who were already in a group
+          count += count_users(member)-1 # minus 1 to not re-count the people in 2 groups
+        return count
+      print(count_users("sales"))
+      print(count_users("engineering"))
+      print(count_users("everyone"))
+      # output:
+      # 3
+      # 8
+      # 18
+
+  # Example
+  # In the while loops practice quiz, you were asked to write a function to calculate the sum of all positive numbers between 1 and n. Rewrite the function using recursion instead of a while loop. Remember that when n is less than 1, the function should return 0 as the answer.
+  def sum_positive_numbers(n):
+    if n<1:
+      return 0
+    return n + sum_of_positive_numbers(n-1) # add every number inside sum_of_positive_numbers and subtract 1 each time
+  print(sum_of_positive_numbers(3))
+  print(sum_of_positive_numbers(5))
+  # output:
+  # 6
+  # 15
+  
+  
+      
+  
+
+
+  
