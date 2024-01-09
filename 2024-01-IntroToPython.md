@@ -235,6 +235,12 @@ def find_total_days(years, months, days): # defining find total days as years, m
 print(find_total_days(2,5,23)) # given 2 years, 5 months, 23 days
 # output: 903
 
+# Example
+def print_seconds(hours, minutes, seconds):
+  print(3600*hours+60*minutes+seconds)
+print_seconds(1,2,3)
+# output: 3723
+
 # Calculating
 def convert_volume(fluid_ounce): defining convert volume as fluid ounce
   ml = fluid_ounce * 29.5 # you need to know ml is fluid ounce multiplied by 29.5
