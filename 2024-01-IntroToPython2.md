@@ -232,3 +232,41 @@ def round_up(number):
   return x*whole_number
 print(round_up(35))
 # output: 40
+
+# Example
+print("A dog" < "A mouse")
+print(9999+8888 > 100*100)
+# output:
+# True
+# True
+
+# Example
+def round_up(number):
+  x = 10
+  whole_number = number // x # floor division operator will give integer value of number divided by x
+  remainder = number % x # modulo operator will give remainder value of number divided by x
+if remainder >= 5:
+  return x*(whole_number+1)
+return x*whole_number
+print(round_up(35))
+# output: 40
+
+# Example
+# If a filesystem has a block size of 4096 bytes, this means that a file comprised of only one byte will still use 4096 bytes of storage. A file made up of 4097 bytes will use 4096*2=8192 bytes of storage. Knowing this, can you fill in the gaps in the calculate_storage function below, which calculates the total number of bytes needed to store a file of a given size?
+def calculate_storage(filesize):
+  block_size = 4096
+  full_blocks = filesize//4096
+  partial_block_remainder = filesize%4096
+  if partial_block_remainder > 0:
+    return 4096*(full_blocks+1)
+  return full_blocks*4096
+
+  print(calculate_storage(1))
+  print(calculate_storage(4096))
+  print(calculate_storage(4097))
+  print(calculate_storage(6000))
+  # output
+  # 4096
+  # 4096
+  # 8192
+  # 8192
