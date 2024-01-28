@@ -1,2 +1,2 @@
-# learning-python-google-style
+# IT, Automation, Python Intro
 Notes on beginner's course for Python
