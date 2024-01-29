@@ -165,4 +165,96 @@ Eli Jones,684-3481127,IT Specialist
 Melody Daniels,846-687-7436,Programmer
 Charlie Rivera,698-746-3357,Web Developer
 
+import csv
+# open file
+f = open("csv_file.txt") 
+# parse file using CSV module
+csv_f = csv.reader(f)
+# iterate through contents
+for row in csv_f:
+  # unpack values of name, phone number, role
+  name, phone, role = row
+  # print to screen
+  print("Name: {}, Phone: {}, Role: {}".format(name, phone, role))
+f.close()
+# output:
+# Name: Sabrina Green, Phone: 802-867-5309, Role: System Administrator
+# Name: Eli Jones, Phone: 684-3481127, Role: IT specialist
+# Name: Melody Daniels, Phone: 846-687-7436, Role: Programmer
+# Name: Charlie Rivera, Phone: 698-746-3357, Role: Web Developer
 
+# Writing (Generating) CSV Files
+# store data in a list
+hosts = [["workstation.local", "192.168.25.46"],["webserver.cloud", "10.2.5.6"]]
+# open with "with open"
+with open('hosts.csv', 'w') as hosts_csv:
+# call writer function, put file as parameter
+writer = csv.writer(hosts_csv)
+# write row function: writes one row at a time
+# write rows function: writes all together
+writer.writerows(hosts)
+
+# find output outside Python, using cat command
+# cat hosts.csv
+# workstation.local.192.168.25.46
+# webserver.cloud.18.2.5.6
+
+# Reading and Writing CSV Files with DICTIONARIES
+# include names of columns as first line of file
+cat software.csv
+# Output name,version,status,users
+# MailTree,5.34,production,324
+# CalDoor,1.25.1,beta,22
+# Chatty Chicken,0.34,alpha,4
+# use DictReader to read and turn each data row into a dictionary
+with open('software.csv') as software:
+reader = csv.DictReader(software)
+  # iterate through to access data using keys
+  for row in reader:
+  print(("{} has {} users").format(row["name"], row["users"]))
+# output:
+# MailTree has 324 users
+# CalDoor has 22 users
+# Chatty Chicken has 4 users
+
+# use DictWriter to generate file from contents of dictionaries
+# each element is a row, values come from dictionaries
+# list contains keys, name, username, department
+users = [ {"name": "Sol Mansi", "username": "solm", "department": "IT infrastructure"},
+ {"name": "Lio Nelson", "username": "lion", "department": "User Experience Research"},
+ {"name": "Charlie Grey", "username": "greyc", "department": "Development"}]
+# define list of keys
+keys = ["name", "username", "department"]
+# open for writing
+  with open('by_department.csv', 'w') as by_department:
+    # write with the keys
+    writer = csv.DictWriter(by_department, fieldnames=keys)
+    # writeheader = creates first line based on the keys
+    # writerows = turns list of dictionaries into lines
+    writer.writeheader()
+    writer.writerows(users)
+
+cat by_department.csv
+# output:
+# name,username,department
+# Sol Mansi,solm,IT Infrastructure
+# Lio Nelson,lion,User Experience Research
+# Charlie Grey,greyc,Development
+
+# Qwiklabs Assessment: Handling Files
+# navigate to the data directory using cd data command
+cd data
+# ls command: to find data
+ls
+# output: employees.csv
+# cat command to view contents of file
+cat employees.csv
+# cd command to go to scripts directory
+cd ~/scripts
+# nano command to create a file: create generate_report.py
+nano generate_report.py
+
+# hash bang(shebang) #!: begin with this, continue to interpreter, the rest of file is an argument
+#!/usr/bin/env python3
+
+# convert employee data to dictionary
