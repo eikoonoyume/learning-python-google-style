@@ -257,4 +257,78 @@ nano generate_report.py
 # hash bang(shebang) #!: begin with this, continue to interpreter, the rest of file is an argument
 #!/usr/bin/env python3
 
-# convert employee data to dictionary
+# CONVERT EMPLOYEE DATA TO DICTIONARY
+# goal of the script: read the CSV file, generate a report with total number of people in each department
+# first function: read_employees(), returns dictionaries from this file
+# use CSV moduel to read and write
+import csv
+# define function, take file_location to employees.csv as a parameter
+def read_employees(csv_file_location):
+# open CSV file with open and csv.DictReader
+# csv.DictReader reads and maps information into dictionary. First row = optional fieldnames parameter. Can delete this so first row become the keys
+# pass dialect as parameter, mainly to remove any leading spaces while parsing
+csv.register_dialect('empDialect', skipinitialspace=True, strict=True)
+employee_file = csv.DictReader(open(csv_file_location), dialect = 'empDialect')
+# iterate to produce dictionary from strings(key) to strings(value)
+employee_list = []
+  for data in employee_file:
+    employee_list.append(data)
+# return list
+return employee_list
+# test function and save it to employee_list, pass employees.csv as parameter, print employee_list to check if it returns a list of dictionaries
+employee_list = read_employees('/home/**insert username**/data/employees.csv')
+# Ctrl + o, Enter, Ctrl + x to save
+# execute file with permission (x)
+chmod +x generate_report.py
+# test function
+./generate_report.py
+
+# PROCESS EMPLOYEE DATA
+# second function: process_data() to receive list of dictionaries, return dictionary of department:amount
+# open and define function, pass employee_list as parameter
+nano generate_report.py
+def process_data(employee_list):
+# initialize new list called department_list, iterate over employee_list, add only departments to department_list
+department_list = []
+  for employee_data in employee_list:
+    department_list.append(employee_data['Department'])
+# remove redundancy in department_list, return dictionary in format department:amount (amount = number of employees in that particular department)
+department_data = {}
+  for department_name in set(department_list):
+    department_data[department_name] = department_list.count(department_name)
+  return department_data
+# set() method was used to convert iterable elements to distint elements
+# pass emoloyee_list, save output in variable called dictionary, print
+dictionary = process_data(employee_list)
+print(dictionary)
+# Ctrl + o, Enter, Ctrl + x to save
+# test function
+./generate_report.py
+# dictionary in format department:amount should return
+
+# GENERATE REPORT
+# use function write_report, which writes a dictionary of deparment:amount to file
+# format: <department1>:<amount1>
+# open generate_report.py, define function
+nano generate_report.py
+# requires dictionary from before, and report_file (output file to generate report) for paramaters
+def write_report(dictionary, report_file):
+# use open() function to open, return file object, requires file path and file mode to pass as parameters. File mode = 'r' for reading, but use 'w+' for opening for reading and writing, overwriting a file
+# iterate through and use write() on file to store data
+with open(report_file, "w+") as f:
+  for k in sorted(dictionary):
+    f.write(str(k)+':'+str(dictionary[k]+'\n')
+  f.close()
+# call write_report() function, pass dictionary variable and report_file (/home/**username**/data/report.txt)
+write_report(dictionary, '/home/**insert username**/data/report.txt')
+# Ctrl + o, Enter, Ctrl + x to save
+# execute script
+./generate_report.py
+# report.txt in data directory has been created
+# go to data directory
+cd ~/data
+# view list of files
+ls
+# view gnerated report file
+cat report.txt
+
