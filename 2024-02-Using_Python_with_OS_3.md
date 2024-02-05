@@ -262,3 +262,256 @@ print(check_character_groups("shopping_list: milk, bread, eggs."))
 
 
 # Regular Expressions in Action
+# combine special characters to create patterns to match text we want
+# list of countries - check which names start and end in a: A.*a
+import re
+print(re.search(r"A.*a", "Argentina"))
+# output: <_sre.SRE_Match object; span=(0, 9), match='Argentina'>
+
+print(re.search(r"A.*a", "Azerbaijan"))
+# output: <_sre.SRE_Match object; span=(0, 9), match='Azerbaija'>
+# output shows that we didn't specify we wanted pattern to match whole string
+# make it stricter by adding beginning of line and end of line characters
+print(re.search(r"^A.*a$", "Australia"))
+# output: <_sre.SRE_Match object; span=(0, 9), match='Australia'>
+
+# Validating Pattern
+# start with letter and circumflex^, character class of all lower and upper and underscore: ^[a-zA-Z_]
+# the rest of variable = as many numbers, letters, underscores that we want: [a-zA-Z0-9_]*$
+import re
+pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
+print(re.search(pattern, "_this_is_a_valid_variable_name"))
+# output: <_sre.SRE_Match object; span=(0, 30), match='_this_is_a_valid_variable_name'>
+
+print(re.search(pattern, "this isn't a valid variable"))
+# output: None
+# output may not have spaces, doesn't match pattern
+
+print(re.search(pattern, "my_variable1"))
+# output: <_sre.SRE_Match object; span=(0, 12), match='my_variable1'>
+
+print(re.search(pattern, "2my_variable1"))
+# output: None
+# output may not start with a number according to our pattern
+
+# Check if the text passed looks like a standard sentence with uppercase first
+# some lowercase letters or space after
+# ending with punctuation
+import re
+def check_sentence(text):
+  result = re.search(r"^[A-Z]+[A-Za-z\s]+[\.!\?]$", text)
+  return result != None
+print(check_sentence("Is this is a sentence?"))
+print(check_sentence("is this is a sentence?"))
+print(check_sentence("Hello"))
+print(check_sentence("1-2-3-GO!"))
+print(check_sentence("A star is born."))
+# output: True
+# output: False (not capital at beginning)
+# output: False (no punctuation)
+# output: False (no dashes in pattern)
+# output: True
+
+# Capturing Groups
+# capturing groups = portions of pattern, enclosed in parenthesis
+# taking info we matches and use it for something else
+# list of full names stored as last name, comma, first name
+# turn the name around, create a string that is first name last name
+# create matching pattern that matches group of letters, comma, space, group of letters
+import re
+result = re.search(r"^(\w*), (\w*)$", "Lovelace, Ada")
+print(result)
+# output: <_sre.SRE_Match object; span=(0, 13), match='Lovelace, Ada'>
+# output: ('Lovelace', 'Ada')
+# \w = match letters, numbers, underscores
+
+# look at output, use group method to return a tuple of two elements
+print(result.groups())
+# output: Lovelace, Ada
+
+# can use indexing to access these groups
+# first element = text matched by regex
+# look at element at index 0
+print(result[0])
+# output: Lovelace
+
+print(result[1])
+# output: Ada
+
+# construct final name using indexes
+print(result[2])
+"{} {}".format(result[2], result[1])
+# output: Ada Lovelace
+
+# rearrange_name function
+# receives name by parameter
+# search string with same pattern as before
+import re
+def rearrange_name(name):
+  result = re.search(r"^(\w*), (\w*)$", name)
+# if result = none, return as it is
+  if result is None:
+    return name
+  return "{} {}".format(result[2], result[1])
+rearrange-name("Lovelace, Ada")
+# output: Ada Lovelace
+
+import re
+def rearrange_name(name):
+  result = re.search(r"^(\w*), (\w*)$", name)
+  if result is None:
+    return name
+  return "{} {}".format(result[2], result[1])
+rearrange_name("Ritchie, Dennis")
+# output: Dennis Ritchie
+
+# pattern currently won't match middle name initials
+# add extra characters: add spaces and dots and dashes
+import re
+def rearrange_name(name):
+  result = re.search(r"^([\w \.-]*), ([\w \.-]*)$", name)
+  # after \w there is a space, then \.- for period and dash
+  if result == None:
+    return name
+  return "{} {}".format(result[2], result[1])
+rearrange_name("Hopper, Grace M.")
+# output: Grace M. Hopper
+
+# use rearrange_name function to match middle names, middle initials, double surnames
+import re
+def rearrange_name(name):
+  result = re.search(r"^([\w \.-]*), ([\w \.-]*)$", name)
+  if result == None:
+    return name
+  return "{} {}".format(result[2], result[1])
+name=rearrange_name("Kennedy, John F.")
+print(name)
+# output: John F. Kennedy
+
+# More Repetition Qualifiers
+# find patterns that repeats a specific number of times
+# numeric repetition qualifiers = {} with 1-2 numbers to specify range
+# match any string of exactly 5 letters
+import re
+print(re.search(r"[a-zA-Z]{5}", "a ghost"))
+# output: <_sre.SRE_Match object; span=(2, 7), match='ghost'>
+
+# use findall function to find more matches
+import re
+print(re.findall(r"[a-zA-Z]{5}", "a scary ghost appeared"))
+# output: ['scary', 'ghost', 'appea']
+
+# match words that are exactly 5 letters long using \b at beginning and end
+import re
+re.findall(r"\b[a-zA-Z]{5}\b", "A scary ghost appeared"))
+# output: ['scary', 'ghost']
+
+# find words within range of 5 to 10 letters or numbers
+import re
+print(re.findall(r"\w{5,10}", "I really like strawberries"))
+# output: ['really', 'strawberri']
+
+# ranges can be open ended using number followed by comma 
+# no upper boundary limit, only limit is maximum repetitions in source text
+import re
+print(re.findall(r"\w{5,}", "I really like strawberries"))
+# output: ['really', 'strawberries']
+
+# comma followed by number = zero up to that amount of repetitions
+import re
+print(re.search(r"s\w{.20}", "I really like strawberries"))
+# s followed by up to 20 alphanumeric characters
+# output: <_sre.SRE_Match object; span=(14, 26), match='strawberries'>
+
+# long_words function
+# returns all words that are at least 7 characters
+import re
+def long_words(text):
+  pattern = r"\w{7,}"
+  result = re.findall(pattern, text)
+  return result
+print(long_words("I like to drink coffee in the morning."))
+print(long_words("I also have a taste for hot chocolate in the afternoon."))
+print(long_words("I never drink tea late at night."))
+# output: ['morning']
+# output: ['chocolate', 'afternoon']
+# output: []
+
+# Extracting PID using regex in Python
+# \ backslash = escape character then [ because we want it 
+# \d+ for 1 or more numerical characters
+# \ backslash then ] because we want it
+import re
+log = "July 31 07:51:48 mycomputer bad_process[12345]: ERROR Performing package upgrade"
+regex = r"\[(\d+)\]"
+# call search function, capturing groups
+result = re.search(regex, log)
+# access the value at index 1
+print(result[1])
+# output: 12345
+
+import re
+log = "July 31 07:51:48 mycomputer bad_process[12345]: ERROR Performing package upgrade"
+regex = r"\[(\d+)\]"
+result = re.search(regex, log)
+result = re.search(regex, "A completely different string that also has numbers [34567]")
+print(result[1])
+# output: 34567
+
+# what if the string doesn't have a block of numbers between square brackets?
+import re
+log = "July 31 07:51:48 mycomputer bad_process[12345]: ERROR Performing package upgrade"
+regex = r"\[(\d+)\]"
+result = re.search(regex, log)
+result = re.search(regex, "A commpletely different string that also has numbers [34567]")
+result = re.search(regex, "99 elephants in a [cage]")
+print(result[1])
+# output: error
+
+# extract_pid function
+# extract the ID or PID
+import re
+log = "July 31 07:51:48 mycomputer bad_process[12345]: ERROR Performing package upgrade"
+regex = r"\[(\d+)\]"
+result = re.serach(regex, log)
+result = re.search(regex, "A completely different string that also has numbers [34567]")
+result = re.search(regex, "99 elephants in a [cage]")
+def extract_pid(log_line):
+  regex = r"\[(\d+)\]"
+# store the result of search function as result value
+  result = re.search(regex, log_line)
+# no success leads to None
+  if result is None:
+    return ""
+# return empty string if PID wasn't found
+  return result[1]
+# access first capture group if match found
+print(extract_pid(log))
+# test function with original log line to check it does it right
+# output: 12345
+
+print(extract_pid("99 elephants in a [cage]"))
+# output: ""
+
+# Add to the regex in the extract_pid function, return uppercase message in parenthesis after the process id
+import re
+def extract_pid(log_line):
+  regex = r"\[(\d+)\] \: ([A-Z]*)" 
+  # \: followed by space
+  # any number of capital letters [A-Z]*
+  if result is None:
+    return None
+  return "{} ({})".format(result[1], result[2])
+print(extract_pid("July 31 07:51:48 mycomputer bad_process[12345]: ERROR Performing package upgrade")) 
+print(extract_pid("99 elephants in a [cage]")) 
+print(extract_pid("A string that also has numbers [34567] but no uppercase message")) 
+print(extract_pid("July 31 08:08:08 mycomputer new_process[67890]: RUNNING Performing backup"))
+# output: 12345 [ERROR]
+# output: None
+# output: None
+# output: 67890 (RUNNING)
+
+# Splitting and Replacing
+
+
+
