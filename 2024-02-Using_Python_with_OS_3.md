@@ -512,6 +512,138 @@ print(extract_pid("July 31 08:08:08 mycomputer new_process[67890]: RUNNING Perfo
 # output: 67890 (RUNNING)
 
 # Splitting and Replacing
+# Review: search function = re.search
+# Review: find all function = re.findall
+# New: split = (instead of taking string as separator) take any regex as separator = re.split
+# split a piece of text into separate sentences, check for dots, question marks, exclamation marks
+import re
+re.split(r"[.?!]", "One sentence. Another one? And the last one!")
+# no backslash escapes for any .?!, they are taken literally as .?! and not as special characters
+# output: ['One sentence', ' Another one', ' And the last one', '']
+# notation marks .?! are not in the resulting list
+# include .?! using capturing parentheses
+import re
+re.split(r"([.?!])", "One sentence. Another one? And the last one!")
+# output: ['One sentence', '.', ' Another one', '?', ' And the last one', '!', '']
 
+# New: sub function used to create new strings by substituting all or part of them for a different string, similar to replace method = re.sub
+# anonymize logs that have user email addresses by removing all email addresses
+# part 1: part before the @ sign
+# part 2: part after the @ sign
+# include alphanumeric characters: \w (letters, numbers, underscore)
+# include .%+-
+# after @ sign, include only alphanumeric, . -
+# redact anything that looks like an address
+import re
+re.sub(r"[\w.%+-]+@[\w.-]+", "[REDACTED]", "Received an email for go_nuts950@my.example.com")
+# output: Received an email for [REDACTED]
+
+# use sub to create new string, use parentheses to create capturing groups
+# 1st parameter: expression that contains the two groups we want to match (before comma and after comma)
+# 2nd parameter: replace the matching string
+# Use \2 to indicate second captured group, follow with space and \1 to indicate 1st captured group
+# capturing groups = \ and the number that indicates corresponding captured group
+import re
+re.sub(r"^([\w .-]*), ([\w .-]*)$", r"\2 \1", "Lovelace, Ada")
+# output: Ada Lovelace
+
+# Writing File Paths in Code
+# code includes file path location for archived content
+# another line/block of code tells where to specifically create a file and store info on it
+# specific structure depends on OS
+# Windows: start with drive name like C or D, uses \
+# Mac and Linux: start with / (root or forward slash)
+# Windows: C:\my-directory\target-file.txt
+# Windows directory written in Python uses forward slash / (recommended): C:/my-directory/target-file.txt
+# If using backslash for Windows directory in Python, it'll count as special character, so you use it twice every time: C:\\my-directory\\target-file.txt
+
+# Using current directory = CWD command = os.getcwd()
+# identify output holder to reference external files: outputs['current_directory_before'] = os.getcwd()
+# list files and directories to find file path: outputs['files_and_directories']=os.listdir()
+# access file paths for environment variables: outputs['path_value']=os.environ.get('PATH')
+
+# Qwiklabs: Work with Regular Expressions
+# navigate to directory
+cd data
+# list files to find data
+ls
+# view contents of user_emails.csv
+cat user_emails.csv
+# navigate to scripts directory
+cd ~/scripts
+# list contents of scripts directory
+ls
+# in script.py, use regex to find all instances of old doman ("abc.edu") in user_emails.csv, replace with new domain ("xyz.edu")
+# update file's permissions
+sudo chmod 777 script.py
+# edit script.py
+nano script.py
+# import libraries for csv module
+import csv
+# import regex module
+import re
+# contains_domain function
+# address and domain parameters, check if email address belongs to old domain
+def contains_domain(address, domain):
+  domain_pattern = r'[\w\.-]+@'+domain+'$'
+    if re.match(domain_pattern, address):
+      return True
+    return False
+# replace domain name
+# replace_domain function
+# make pattern that identifies sub-strings containing old domain, store pattern in variable old_domain_pattern
+# use substitution function sub() to replace old name with new and return updated email address
+def replace_domain(address, old_domain, new_domain):
+  old_domain_pattern = r'' + old_domain + '$'
+  address = re.sub(old_domain_pattern, new_domain, address)
+  return address
+
+# write CSV file with replaced domain
+# declare old_domain and new_domain using main()
+old_domain, new_domain = 'abc.edu', 'xyz.edu'
+# store path of user_emails.csv in csv_file_location
+# give file path for resulting updated list in variable report_file
+csv_file_location = '/home/<username>/data/user_emails.csv
+  report_file = '/home/<username>/data' + '/updated_user_emails.csv'
+# initialize empty list to store user email addresses
+# pass list to contains_domain, replace domains with replace_domain
+user_email_list = []
+  old_domain_email_list = []
+  new_domain_email_list = []
+# iterate over user_email_list, matches will be appended to list
+# read data from list
+    with open(csv_file_location, 'r') as f:
+      user_data_list = list(csv.reader(f))
+      user_email_list = [data[1].strip() for data in user_data_list[1:]]
+# old_domain_email_list contains all email address with old domain, checked by contains_domain
+      for email_address in user_email_list:
+        if contains_domain(email_address, old_domain):
+          old_domain_email_list.append(email_address)
+          replaced_email = replace_domain(email_address, old_domain, new_domain)
+          new_domain_email_list.append(replaced_email)
+# define headers for output file through user_data_list
+      email_key = ' ' + 'Email Address'
+      email_index = user_data_list[0].index(email_key)
+# replace email addresses in user_data_list by iterating over new_domain_email_list, replace values in user_data_list
+# close file with close() method
+      for user in user_data_list[1:]:
+        for old_domain, new_domain in zip(old_domain_email_list, new_domain_email_list):
+          if user[email_index] == ' ' + old_domain:
+            user[email_index] = ' ' + new_domain
+      f.close()
+# write list to output file declared at beginning of script within variable report_file
+  with open(report_file, 'w+') as output_file:
+    writer = csv.wrtier(output_file)
+    writer.writerows(user_data_list)
+    output_file.close()
+# call main() method
+main()
+# ctrl-o, enter ctrl-x to save
+# run file
+./script.py
+# view newly generated file
+ls ~/data
+# view contents of file
+cat ~/data/updated_user_emails.csv
 
 
