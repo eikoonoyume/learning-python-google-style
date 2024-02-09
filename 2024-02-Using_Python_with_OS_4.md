@@ -300,4 +300,217 @@ result = subprocess.run(["myapp"], env=my_env)
 # don't reinvent the wheel: check if Python can do it, or if someone already created an automation
 
 # Filtering Log Files with Regex
+# open function = returns file object, then iterates through each line using for-loop
+#!/bin/env/python3
+
+import sys
+logfile = sys.argv[1]
+with open(logfile) as f:
+  for line in f:
+    print(line.strip())
+# read line by line if file is large
+# CRON jobs = schedule scripts on UNIX-based OS
+# audit log files and see who's been launching CRON jobs
+# ignore any line without CRON substring, check using "in" keyword
+#!/bin/env/python3
+import sys
+logfile = sys.argv[1]
+with open(logfile) as f:
+  for line in f:
+    if "CRON" not in line:
+      continue
+    print(line.strip())
+# continue keyword = tells loop to go to next element
+
+# extract usernames using regex
+# use escape characters, capture groups, end of string anchor
+# username foundat end log line, use $ sign anchor to only match texts at end of line
+# username = "user" followed by a string wrapped in parentheses
+# escape parenthesis with backslash
+# use another set of parenthesis to create capture group
+# username = match any alphanumeric character by using backslash w plus
+import re
+pattern = r"USER \((\w+)\)$"
+line = "Jul 6 14:03:01 computer.name CRON[29440]: USER (naughty_user)"
+result = re.search(pattern, line)
+print(result[1]_
+# add to script
+#!/bin/env/python3
+
+import re
+import sys
+
+logfile = sys.argv[1]
+with open(logfile) as f:
+  for line in f:
+    if "CRON" not in line:
+      continue
+    pattern = r"USER \((\w+)\)$"
+    result = re.search(pattern, line)
+    print(result[1])
+# run it
+chmod +x check_cron.py
+./check_cron.py syslog
+# output:
+# good_user
+# naughty_user
+# naughty_user
+# naughty_user
+
+# use same syslog, display date, time, process ID inside square brackets
+# read each line of syslog, pass contents to show_time_of_pid function
+# extract date, time, process ID, return format: Jul 6 14:01:23 pid:29440
+import re
+def show_time_of_pid(line):
+  pattern = r"(^\w* .\d*.\d*:\d*:\d+)(.*)\[(\d+)\]"
+  result = re.search(pattern, line)
+  return "{} pid:{}".format(result.group(1), result.group(3))
+print(show_time_of_pid("Jul 6 14:01:23 computer.name CRON[29440]: USER (good_user)"))
+print(show_time_of_pid("Jul 6 14:02:08 computer.name jam_tag=psim[29187]: (UUID:006)"))
+print(show_time_of_pid("Jul 6 14:02:09 computer.name jam_tag=psim[29187]: (UUID:007)"))
+print(show_time_of_pid("Jul 6 14:03:01 computer.name CRON[29440]: USER (naughty_user)"))
+print(show_time_of_pid("Jul 6 14:03:40 computer.name cacheclient[29807]: start syncing from \"0xDEADBEEF\""))
+print(show_time_of_pid("Jul 6 14:04:01 computer.name CRON[29440]: USER (naughty_user)"))
+print(show_time_of_pid("Jul 6 14:05:01 computer.name CRON[29440]: USER (naughty_user)"))
+# output:
+# Jul 6 14:01:23 pid:29440
+# Jul 6 14:02:08 pid:29187
+# Jul 6 14:02:09 pid:29187
+# Jul 6 14:03:01 pid:29440
+# Jul 6 14:03:40 pid:29807
+# Jul 6 14:04:01 pid:29440
+# Jul 6 14:05:01 pid:29440
+
+# Making Sense out of the Data
+# dictionaries = useful when wanting to count appearances of strings
+# store username as keys, use value to count nmber of appearances
+# create an empty dictionary using curly brackets
+usernames = {}
+# set variable name as good_user for example
+name = "good_user"
+# set value associated with key as one more than current value
+usernames[name] = usernames.get(name, 0) +1
+# get method = get current value
+# current value = default value of zero, key that is present = default value
+# add one to value and set as new value
+print(usernames)
+# output: {'good_user': 1}
+usernames[name] = usernames.get(name, 0) +1
+print(usernames)
+# output: {'good_user': 2}
+
+# initialize empty dictionary at beginning of code
+#!/bin/env/python3
+
+import re
+import sys
+
+logfile = sys.argv[1]
+usernames = {}
+# check that we actually match regex, check if result variable is none
+with open(logfile) as f:
+  for line in f:
+    if "CRON" not in line:
+      continue
+# use continue keyword if result is none
+    pattern = r"USER \((\\w+)\)$"
+    result = re.search(pattern, line)
+# add values to dictionary as we process
+    if result is None:
+      continue
+    name = result[1]
+# define name variable that will store capture group
+    usernames[name] = usernames.get(name, 0) +1
+# print results in dictionary
+print(usernames)
+# try test file
+./check_cron.py syslog
+# output: {'good_user':1, 'naughty_user':3}
+
+# Qwiklabs: Word with Log Files
+# write script to search log file for exact error, output that error into separate file to work out what's wrong
+# fishy.log log entry format: Month Day hour:minute:second mycomputername "process_name"["random 5 digit number"] "ERROR/INFO/WARN" "Error description"
+# view all logs with cat comamand
+cat ~/data/fishy.log
+# use Python to search log files for ERROR log
+# narrow search to "CRON ERROR Failed to start"
+# create python script named find_error.py in scripts directory using nano editor
+cd ~/scripts
+nano find_error.py
+# add shebang line
+#!/usr/bin/env/python3
+import sys
+import os
+import re
+# sys module = info about Python interpreter's constants, functions, methods
+# os module = provides portable way of using OS dependent functionarity with Python
+# regex = sequnce of characters that define a search pattern, use re module
+# write function error_search that takes log_file as parameter, turns returned_errors
+# define error_search and pass log file as parameter
+def error_search(log_file):
+# search all logs for any type of logs, make scrip consistent and dynamic
+# define input function to receive the type of ERROR that the end-user would like to search
+# assign to variable named error
+# input() function takes input from user and evaluates the expression
+# Python autoomatically identifies whether the user entered a string, number, or list
+# incorrect input leads to syntax error or exception(stop, until user gives input)
+# iterate over user input and log files
+# intialize list called returne_errors
+error = input("What is the error?")
+  returned_erros = []
+# use Python methods for file handling
+# open log file in reading mode, ues UTF-8 encoding
+with open(log_file, mode='r', encoding='UTF-8') as file:
+# read each log separately from fishy.log using readlines() method
+# iterate over user input to get desired search results
+# create a list to store all patterns(user input)
+# list named error_patterns
+# error_patterns has a pattern "error" to filter out all ERROR logs only
+# change this to view other types of logs like INFO and WARN
+# empty initialize the list to fetch all types of logs
+# ad whole user input to this list called error_patterns
+  for log in file.readlines():
+    error_patterns = ["error"]
+    for i in range(len(error.split(' '))):
+      error_patterns.append(r"{}".format(error.split(' ')[i].lower()))
+# use search() method from re module = check whether fishy.log file has user defined pattern
+# check if it's available, append to list called returned_errors
+    if all(re.search(error_pattern, log.lower()) for error_pattern in error_patterns):
+      returned_errors.append(log)
+  file.close()
+return returned_errors
+# define file_output() function = takes returned_errors as formal parameter
+def file_output(returned_errors):
+# write returned_errors into errors_found.log file by opening file in writing mode
+# use method os.path.expanduser ('~') to define output file, return home directory of system instance
+# concatenate path (to the home directory) to file errors_found.log in /data directory
+  with open(os.path.expanduser('~') + '/data/errors_found.log', 'w') as file:
+# write all logs to output file by iterating over returned_errors
+    for error in returned_errors:
+      file.write(error)
+    file.close()
+# call functions, run script
+# define main function, call both functions defined earlier
+# variable log_file takes in path to log file passed as parameter
+# call first function (error_search()) and pass variable log_file to function
+# return list of errors that would be stored in variable returned_errors
+# call second function (file_output()) and pass variable returned_errors as parameter
+# sys.exit(0) = exit from Python
+# optional argument passed can be integer giving the exit status (defaulting to zero) or another type of object
+# integer zero = "successful termination", nonzero value = "abnormal termination" by shells
+if __name__ == "__main__":
+  log_file = sys.argv[1]
+  returned_errors = error_search(log_file)
+  file_output(returned_errors)
+  sys.exit(0)
+# ctrl-o, Enter, ctrl-x to save
+# make file executable before running
+sudo chmod +x find_error.py
+# run by passing path to fishy.log as parameter
+./find_error.py ~/data/fishy.log
+# enter type of error to be searched
+CRON ERROR Failed to start
+# generates errors_found.log 
+# view ERROR log
+cat ~/data/errors_found.log
 
