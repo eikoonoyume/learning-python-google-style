@@ -123,4 +123,106 @@ def divid(a, b):
   return a / b
 # AssertionError message = informs programmer that a value cannot be divisable by zero
 
+# pytest fixtures
+# fixtures = separate parts of code that only run for tests, reusable pieces of test setups and teardown code
+import pytest
+class Fruit:
+  def __init__(self, name):
+    self.name = name
+    self.cubed = False
+  def cube(self):
+    self.cubed = True
+class FruitSalad:
+  def __init__(self, *fruit_bowl):
+    self.fruit = fruit_bowl
+    self._cube_fruit()
+  def _cube_fruit(self):
+    for fruit in self.fruit:
+      fruit.cube()
+# Arrange
+@pytest.fixture
+def fruit_bowl():
+  return [Fruit("apple"), Fruit("banana")]
+def test_fruit_salad(fruit_bowl):
+  # Act
+  fruit_salad = FruitSalad(*fruit_bowl)
+  # Assert
+  assert all(fruit.cubed for fruit in fruit_salad.fruit)
+# test_fruit_salad requests fruit_bowl
+# pytest recognizes this, executes fruit_bowl fixture function, takes object it returns into test_fruit_salad as fruit_bowl argument
 
+# unittest vs pytest
+# unittest = directly in python, automatically detects test cases within an application, must be called from command line
+# unittest = object-oriented approach to write tests, provide special assert methods like assertEqual(), assertTrue()
+# pytest = imported from outside, automatically performed using prefix test_
+# pytest = built-in assert statements to make tests easier to read and write
+
+# Unit Test
+# unit test = common type of automatic testing
+# used to verify that small isolated parts of program are correct
+# generally written alongside the code to test behavior of individual pieces or units like functions/methods
+# isolation = important characteristic of unit test
+# unit tests should only test the unit of code they target, the function or method that's being tested
+# code
+#!/usr/bin/env python3
+import re
+def rearrange_name(name):
+  result = re.search(r"^([\w .]*), ([\w .]*)$", name)
+  return "{} {}".format(result[2], result[1])
+from rearrange import rearrange_name
+
+rearrange_name("Lovelace, Ada")
+
+# test
+#!/usr/bin/env python3
+import re
+def rearrange_name(name):
+  result = re.search(r"^([\w .]*), ([\w .]*)$", name)
+  return "{} {}".format(result[2], result[1])
+from rearrange import rearrange_name
+python3
+from rearrange import rearrange_name
+rearrange_name("Lovelace, Ada")
+# output: 'Ada Lovelace'
+# used from keyword
+# rearrange = module name that contains rearrange_name function
+
+# Writing Unit Tests in Python
+# write code that runs a test and verifies output
+# create unit tests for rearrange_name function
+#!/usr/bin/env python3
+import re
+
+def rearrange_name(name):
+  result = re.search(r"^([\w .]*), ([\w .]*)$", name)
+  return "{} {}".format(result[2], result[1])
+# call script with same name of module that it's testing and appending suffix _test
+# create the rearrange_test.py file
+# test the rearrange_name function of rearrange module
+# import unittest module
+#!/usr/bin/env python3
+
+import unittest
+
+from rearrange import rearrange_name
+# create our own class by inherits from test case
+# write own test rearrange class that inherits from test case
+# called test class, TestRearrange, indicated that it should inherit functionality from TestCase class in unit test module
+class TestRearrange(unittest.TestCase):
+# any methods defined in TestRearrange class that start with prefix test_ will automatically become tests
+# turn manual test into automatic test that verifies that basic names are formatted correctly
+# test_basic method, set up expected inputs and outputs, use assertEqual method provided by inherited test case class to verify we get what we expected
+# assertEqual method basically says both arguments are equal, True = test passes, False = test fails with error printed
+ def test_basic(self):
+    testcase = "Lovelace, Ada"
+    expected = "Ada Lovelace"
+    self.assertEqual(rearrange_name(testcase), expected)
+# run with unittest.main() function
+unittest.main()
+# make script executable and run
+chmod +x rearrange_test.py
+./rearrange_test.py
+# output: Ran 1 test in 0.000s
+# output: OK
+
+# Edge Cases
