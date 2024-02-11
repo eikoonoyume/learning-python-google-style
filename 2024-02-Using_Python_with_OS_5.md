@@ -226,3 +226,261 @@ chmod +x rearrange_test.py
 # output: OK
 
 # Edge Cases
+# edge cases = inputs to code that produce unexpected results, found at extreme ends of ranges
+# usually need special handling to behave correctly
+# add test for empty string
+def test_empty(self):
+  testcase = ""
+  expected = ""
+  self.assertEqual(rearrange_name(testcase), expected)
+
+./rearrange_test.py
+# output: *error messager*
+
+# perform simple check of result variable before operating
+#!/usr/bin/env python3
+import re
+def rearrange_name(name):
+  result = re.search(r"^([\w .-]*), ([\w .-]*)$", name)
+  if result is None:
+    return ""
+  return "{} {}".format(result[2], result[1])
+# norma input produces result, empty string returns original empty string
+# sometimes you want the program to crash with error because it's bad for automation to fail silently
+# other kinds of edge cases: passing zero to function that expects number; negative numbers; extremely large numbers
+# run
+./rearrange_test.py
+# output: Ran 2 tests in 0.000s
+# output: OK
+
+# Additional Test Cases
+from rearrange import rearrange_name
+import unittest
+
+class TestRearrange(unittest.TestCase):
+  def test_basic(self):
+    testcase = "Lovelace, Ada"
+    expected = "Ada Lovelace"
+    self.assertEqual(rearrange_name(testcase), expected)
+  def test_empty(self):
+    testcase = ""
+    expected = ""
+    self.assertEqual(rearrange_name(testcase, expected)
+  def test_one_name(self):
+    testcase = "Voltaire"
+    expected = "Voltaire"
+    self.assertEqual(rearrange_name(testcase), expected)
+# run
+unittest.main()
+# case = Hopper, Grace M.
+# output: Ran 3 tests in 0.000s
+# output: OK
+# case = Voltaire
+# output: *error message*
+# case = name without a comma, result is none so it should return empty string
+# fix to returning original name instead of empty string
+import re
+def rearrange_name(name):
+  result = re.search(r"^([\w .]*), ([\w .]*)$", name)
+  if result is None:
+    return name
+  return "{} {}".format(result[2], result[1]_
+# run
+./rearrange_test.py
+# output: Ran 4 tests in 0.000s
+# output: OK
+
+# White Box Test = clear-box test/transparent test
+# relies on test creator's knowledge of software being tested to construct test cses
+# test creator knows how the code works, can write test cases that use the understanding to make sure performances are as is expected
+# helpful = test writer can use knowledge of source code to create tests that cover most behaviors
+# unit tests run alongside or after code has been developed = white-box test because test cases are made with knowledge of how software works
+
+# Black Box test = software being tested is treated like an opaque box
+# test doesn't know what the internals of how software works
+# written with awareness of what program should do, it's requirements or specifications, but now how it does it
+# example: verify that when you type www.google.de in broswer, the search page returned is German
+# don't know how servers process your request, but the end result is as expected
+# useful = don't rely on knowledge of how system works, test cases = less biased by code
+# usually cover situations not anticipated by programmar who originally wrote script
+
+# Black-box White-box Combo
+# black-box = verifies that details are displayed for products
+# white-box = call different functions used by the page, checking that prices are displayed in the right currency, description is correctly wrapped, etc
+
+# Integration tests = verify that instructions between different pieces of code in integrated environments work as expected
+# verify interactions and make sure the whole system works expectly
+# goal = take interactions and make sure the whole system works as expected
+# usually take individual modules of code that unit tests verify then combine them into group to test
+# might need to create a separate test environment
+# usually take a bit more work to set up
+
+# Regression tests = type of unit test, usually written as part of a debugging and troubleshooting process to verify that issue or error has been fixed once identified
+# if script has bug, first trigger the buggy behavior, then fix the bug so that a test passes
+# useful part of a test suite
+# ensure that same mistakes don't happen twice
+# same bug can't be reintroduced to code because then the regression test would fail
+
+# Smoke tests = build verification tests
+# serves as a kind of sanity check to find major bugs in programs
+# answer basic questions like does the program run
+# run before more refined testing takes place
+# webservice example: smoke test = check if service is running on corresponding port
+
+# load tests = verify that system behaves well when it's under significant load
+# need to generate traffic to the application, simulating typical usage of service
+# helpful when deploying new versions of applications, verifying that performance doesn't degrade
+# test suite = taking together a group of tests of one or many kinds
+
+# Test-Driven Development = TTD
+# process that calls for creating test before writing the code
+# creating some tests first makes sure that you've thought about the problem you're trying to solve, and some different approaches that you might use to accomplish it
+# helps you think about the ways your program could fail and break, leading to valuable insights and change of approach
+# involves first writing, then running to make it fail
+# after verifying failure, write code that will satisfy the test, run again
+# fail, then debug, run, repeat cycle for each new feature
+
+# Try-Except Construct
+# TypeError
+# IndexError
+# ValueError = type of error, indicates that there was a problem with one of the values of the parameters
+
+# try-except construct 
+#!/usr/bin/env python3
+
+def character_frequency(filename):
+  # counts frequency of each character in file
+  # try to open file
+  try:
+    f = open(filename)
+  except OSError:
+    return None
+  # process file
+  characters = {}
+  for line in f:
+    for char in line:
+      characters[char] = characters.get(char, 0) + 1
+  f.close()
+  return characters
+# character_frequency() function = reads contents of file to count frequency of each character in them
+# try-except block: first try to do operation, if error, then except block which matches error and cleans up
+# be aware of errors that may be raised by functions called
+
+# Raising Errors
+# usually happens when some conditions necessary for function to properly function doen't do their job and return None/other base value
+# function that verifies whether chosen username is valid
+# check that name is at least certain amount of characters
+
+def validate_user(username, minlen):
+  if len(username) < minlen:
+    return False
+  if not username.isalnum():
+    return False
+  return True
+# checking that username variable has least minlen characters
+#!/usr/bin/env python3
+
+def validate_user(username, minlen):
+  if minlen < 1:
+    raise ValueError("minlen must be at least 1")
+  if len(username) < minlen:
+    return False
+  if not username.isalnum():
+    return False
+  return True
+# keyword to generate at error = raise
+from validations import validate_user
+validate_user("", -1)
+# output: *error message*
+# call it with valued parameters
+from validations import validate_user
+validate_user("", 1)
+# output: False
+validate_user("myuser", 1)
+# output: True
+
+from validations import validate_user
+validate_user(88, 1)
+# output: *error message*
+
+from validations import validate_user
+validate_user ([], 1)
+# output: *error message*
+
+from validations import validate_user
+validate_user(["name"], 1)
+# output: *error message*
+
+# assert keyword = tries to verify that a conditional expression is True, false = raises an assertion error with message
+# helpful for debugging, add them in at any point
+# get removed if interpreter is asked, in order to optimize faster running
+# use raise to check for conditions that we expect
+# use assert to verify situations that aren't expected, but might cause misbehavior
+#!/usr/bin/env python3
+ def validate_user(username, minlen):
+   assert type(username) == str, "username must be a string"
+   if minlen < 1:
+     raise ValueError("minlen must be at least 1")
+  if len(username) < minlen:
+    return False
+  if not username.isalnum():
+    return False
+  return True
+  # close interpreter, restart and import modified module
+
+  # Testing for Expected Errors
+  from validations import validate_user
+    validate_user([3], 1)
+  # output: *error message*
+  # negative value of minlen example: expectation is that it will raise an error
+  # use assert raises method
+  #!/usr/bin/env python3
+  import unittest
+  from validatesion import validate_user
+  class TestValidateUser(unittest.TestCase):
+    def test_valid(self)"
+      self.assertEqual(validate_user("validuser", 3), True)
+    def test_too_short(self):
+      self.assertEqual(validate_user("inv", 5), False)
+    def test_invalid_characters(self):
+      self.assertEqual(validate_user*("invalid_user", 1), False)
+    def test_invalid_minlen(self):
+      self.assertRaises(ValueError, validate_user, "user", -1)
+  # run
+  unittest.main()
+  # run
+  ./validations_test.py
+  # output: Ran 4 tests in 0.000s
+  # output: OK
+
+  # Qwiklabs: Implementing unit testing
+  # add a test to reproduce the bug, make the necessary corrections, and verify that all the tests pass to make sure the script works
+
+  # navigate to data directory
+  cd ~/data
+  # list files
+  ls
+  # view contents of user_emails.csv
+  cat user_emails.csv
+  # navigate to script directory
+  cd ~/scripts
+  # list contents
+  ls
+  # view emails.py
+  cat emails.py
+
+  # populate_dictionary(filename) = reads user_emails.csv file, populates dictionary with name/value pairs
+  # find_emails(argv) = searchs dictionary created in previous function, returns associated email address
+  # sys.argv = where arguments from command line are stroed, first elememnt [0] is always name of file being executes, so first name is argv[1], and last name is argv[2]
+  # choose a name
+  python3 emails.py Blossom Gill
+  # output: blossom@abc.edu
+  # create a new file in scripts directory to write test cases
+  nano ~/scripts/emails_test.py
+  # use unittest package for 
+  # add shebang line and import packages
+  #!/usr/bin/env python3
+  import unittest
+  c
+  
+  
