@@ -426,15 +426,15 @@ validate_user(["name"], 1)
   if not username.isalnum():
     return False
   return True
-  # close interpreter, restart and import modified module
+# close interpreter, restart and import modified module
 
-  # Testing for Expected Errors
+# Testing for Expected Errors
   from validations import validate_user
     validate_user([3], 1)
-  # output: *error message*
-  # negative value of minlen example: expectation is that it will raise an error
-  # use assert raises method
-  #!/usr/bin/env python3
+# output: *error message*
+# negative value of minlen example: expectation is that it will raise an error
+# use assert raises method
+#!/usr/bin/env python3
   import unittest
   from validatesion import validate_user
   class TestValidateUser(unittest.TestCase):
@@ -446,41 +446,247 @@ validate_user(["name"], 1)
       self.assertEqual(validate_user*("invalid_user", 1), False)
     def test_invalid_minlen(self):
       self.assertRaises(ValueError, validate_user, "user", -1)
-  # run
+# run
   unittest.main()
-  # run
+# run
   ./validations_test.py
-  # output: Ran 4 tests in 0.000s
-  # output: OK
+# output: Ran 4 tests in 0.000s
+# output: OK
 
-  # Qwiklabs: Implementing unit testing
-  # add a test to reproduce the bug, make the necessary corrections, and verify that all the tests pass to make sure the script works
+# Qwiklabs: Implementing unit testing
+# add a test to reproduce the bug, make the necessary corrections, and verify that all the tests pass to make sure the script works
 
-  # navigate to data directory
+# navigate to data directory
   cd ~/data
-  # list files
+# list files
   ls
-  # view contents of user_emails.csv
+# view contents of user_emails.csv
   cat user_emails.csv
-  # navigate to script directory
+# navigate to script directory
   cd ~/scripts
-  # list contents
+# list contents
   ls
-  # view emails.py
+# view emails.py
   cat emails.py
 
-  # populate_dictionary(filename) = reads user_emails.csv file, populates dictionary with name/value pairs
-  # find_emails(argv) = searchs dictionary created in previous function, returns associated email address
-  # sys.argv = where arguments from command line are stroed, first elememnt [0] is always name of file being executes, so first name is argv[1], and last name is argv[2]
-  # choose a name
+# populate_dictionary(filename) = reads user_emails.csv file, populates dictionary with name/value pairs
+# find_emails(argv) = searchs dictionary created in previous function, returns associated email address
+# sys.argv = where arguments from command line are stroed, first elememnt [0] is always name of file being executes, so first name is argv[1], and last name is argv[2]
+# choose a name
   python3 emails.py Blossom Gill
-  # output: blossom@abc.edu
-  # create a new file in scripts directory to write test cases
+# output: blossom@abc.edu
+# create a new file in scripts directory to write test cases
   nano ~/scripts/emails_test.py
-  # use unittest package for 
-  # add shebang line and import packages
-  #!/usr/bin/env python3
-  import unittest
-  c
-  
-  
+# use unittest package for 
+# add shebang line and import packages
+#!/usr/bin/env python3
+import unittest
+# import find_email() function which is defined in the script emails.py
+from emails import find_email
+# create class
+class EmailsTest(unittest.TestCase):
+# test case is created by subclassing unittest.TestCase, write first basic test case test_basic
+  def test_basic(self):
+    testcase = [None, "Bree", "Campbell"]
+    expected = "breee@abc.edu"
+    self.assertEqual(find_email(testcase), expected)
+if __name__ == '__main__':
+    unittest.main()
+# test case has parameters to be passed to script emails.py
+# script file = first element of input parameters through command line argv
+# pass None in place of script file, call later in the script
+# Adding to None, pass first name and last name as parameters
+# variable stores expected value to be returned by emails.py
+# assertEqual method passes test case to find_email() function imported earlier, checks if it generated expected output
+# ctrl-o, Enter, ctrl-x to save
+# run through command line, give permission to execute
+chmod +x emails_test.py
+# run
+./emails_test.py
+# output: Ran 1 test in 0.000s
+# output: OK
+
+# missing parameters
+python3 emails.py Kirk
+# output: **error message**
+# write test case to handle this error
+# test case should pass the first name to the script
+# add test case test_one_name after first test case
+# note down the name of the test cases, knowing the names will be helpful in running individual tests
+nano emails_test.py
+  def test_one_name(self):
+    testcase = [None, "John"]
+    expected = "Missing parameters"
+    self.assertEqual(find_email(testcase), expected)
+# updated script now looks like
+#!/usr/bin/env python3
+
+import unittest
+from emails import find_email
+
+class TestFile(unittest.TestCase):
+  def test_basic(self):
+    testcase = [None, "Bree", "Campbell"]
+    expected = "breee@abc.edu"
+    self.assertEqual(find_email(testcase), expected)
+  def test_one_name(self):
+    testcase = [None, "John"]
+    expected = "Missing parameters"
+    self.assertEqual(find_email(testcase), expected)
+if __name__ == '__main__':
+  unittest.main()
+# ctrl-o, Enter, ctrl-x to Save
+# run
+./emails_test.py
+# output: **error message**
+
+# fix code
+# solution 1: use a try/except clause to handle IndexError
+# solution 2: check length of input parameters before travering the user_emails.csv file for email address
+# test cases should pass, script should return "Missing parameters"
+
+# try/except clause
+# first execute the try clause
+# if no exception occurs, the except clause is ignored
+# if exception occurs duritn the execution of the try clause, the rest of try clause is then skipped
+# attempts to match the type with the exception named after the except keyword
+# if matches, the except clause is executed
+# if not, the control is passed on to outer try statements
+# if no handler is found, it's an unhandled exception, and execution stops with error message
+
+# add try/except clause
+nano emails.py
+# add complete code block with find_email(argv) funtion which is within the try block
+# add an IndexError execption within the except block
+# execution will start normally with any number of parameters given to script
+# if find_email(argv) function receives required number of parameters, it will return email address
+# if not the required number of parameters, it will throw IndexError exception
+# except clause would execute
+def find_email(argv):
+  # return email address based on username given
+  # create username based on command line input
+  try:
+    fullname = str(argv[1] + " " + argv[2])
+  # preprocess data
+    email_dict = populate_dictionary('/home/<username>/data/user_emails.csv')
+  # find and print email
+    return email_dict.get(fullname.lower())
+  except IndexError:
+    return "Missing parameters"
+
+# complete emails.py file now looks like
+#!/usr/bin/env python3
+
+import sys
+import csv
+
+def populate_dictionary(filename):
+  # populate dictionary with name/email pairs for easy lookup
+  email_dict = {}
+  with open(filename) as csvfile:
+    lines = csv.reader(csvfile, delimiter = ',')
+    for row in lines:
+      name = str(row[0].lower())
+      email_dict[name] = row[1]
+  return email_dict
+def find_email(argv):
+  # return email address based on username given
+  # create username based on command line input
+  try:
+    fullname = str(argv[1] + " " + argv[2])
+    # preprocess data
+    email_dict = populate_dictionary('/home/<username>/data/user_emails.csv')
+    # find and print email
+    return email_dict.get(fullname.lower())
+  except IndexError:
+    return "Missing parameters"
+  def main():
+    print(find_email(sys.argv))
+  if __name__ == "__main__":
+    main()
+# ctrl-o, Enter, ctrl-x to save
+# run
+./emails_test.py
+
+# search for a non-existent employee
+# expected output = "No email address found"
+# add test case in emails_test.py file after second test case
+# open emails_test.py
+nano emails_test.py
+# add following test case
+  def test_two_name(self):
+    testcase = [None, "Roy", "Cooper"]
+    expected = "No email address found"
+    self.assertEqual(find_email(testcase), expected)
+
+# updated file
+#!/usr/bin/env python3
+
+import unittest
+from emails import find_email
+
+class TestFile(unittest.TestCase):
+  def test_basic(self):
+    testcase = [None, "Bree", "Campbell"]
+    expected = "breee@abc.edu"
+    self.assertEqual(find_email(testcase), expected)
+  def test_one_name(self):
+    testcase = [None, "John"]
+    expected = "Missing parameters"
+    self.assertEqual(find_email(testcase), expected)
+  def test_two_name(self):
+    testcase = [None, "Roy", "Cooper"]
+    expected = "No email address found"
+    self.assertEqual(find_email(testcase), expected)
+
+if __name__ == '__main__':
+  unittest.main()
+# ctrl-o, Enter, ctrl-x to Save
+# run
+./emails_test.py
+# failed
+# use email_dict.get(full) method = fetches email address from list if found, None if not found
+# add an if-else loop to return only if email_dict.get(username) returns valid email, "No email address found" if not
+# edit script
+nano emails.py
+# located return email_dict.get(fullname.lower()) within script under find_email(argv) function and replace it with
+#!/usr/bin/env python3
+
+import sys
+import csv
+
+def populate_dictionary(filename):
+  # populate dictionary with name/email pairs for easy lookup
+  email_dict = {}
+  with open(filename) as csvfile:
+    lines = csv.reader(csvfile, delimiter = ',')
+    for row in lines:
+      name = str(row[0].lower())
+      email_dict[name] = row[1]
+  return email_dict
+def find_email(argv):
+  # return email address based on username given
+  # create username based on command line input
+  try:
+    fullname = str(argv[1] + " " + argv[2])
+    # preprocess data
+    email_dict = populate_dictionary('/home/<username>/data/user_emails.csv')
+    # find and print email
+    # if email exists, print
+    if email_dict.get(fullname.lower()):
+      return email_dict.get(fullname.lower())
+    else:
+      return "No email address found"
+  except IndexError:
+    return "Missing parameters"
+  def main():
+    print(find_email(sys.argv))
+  if __name__ == "__main__":
+    main()
+# ctrl-o, Enter, ctrl-x to save
+# run
+python3 emails_test.py
+# output: Ran 3 tests i 0.001s
+# output: OK
+python3 emails.py Roy Cooper
+# output: No email address found
