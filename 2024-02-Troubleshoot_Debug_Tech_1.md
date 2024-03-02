@@ -312,3 +312,327 @@ print(next_date(str(today)))
 
 print(next_date("2021-01-01")) # Should return 2022-01-01
 print(next_date("2020-02-29")) # Should return 2024-02-29
+
+# Applying Binary Search in Troubleshooting
+# bisect = cut problem in half for each iteration
+# example: identify cuase of failure by bisecting list of files
+# create copy of directory with just 6 of total of 12 files, start program
+# crash = bad file is among 6, no crash = it's the other 6
+# pick 3 of the 6, run program, eventually figure out which of the files is the problem
+# use bisect = Git command that receives 2 points in time in Git history and repeatedly lets us try the code at the middle point between them until we find the commit that caused breakage
+# bisect commit lets you find out which command causes the software to stop working on computer if you're using open source software that's tracking Git
+
+
+# Finding Invalid Data
+# use --server flag = takes name of database server, pass test as the parameter
+/import_data$ cat contacts.csv | ./import.py --server test
+# output: Import error
+# use wc = to count characters, words, and lines in a file
+# use wc -l = prints the amount of lines in a file
+/import_data$ we -l contacts.csv
+# output: 100 contacts.csv
+
+# use head = command to print the first lines in the file
+# use tail = command to print the last lines of file
+# pass amount of lines you want to include as parameter
+# example: head -15 = first 15 lines, tail -20 = last 20 lines
+/import_data$ head -15 contacts.csv
+/import_data$ tail -20 contacts.csv
+
+# use pipes to connect output of head or tail commands
+/import_data$ head -50 contacts.csv | ./import.py --server test
+# run program
+# first half failes, split again
+# use pipe to take only half of previous number
+/import_data$ head -50 contacts.csv | head -25 | ./import.py --server test
+# output: Import successful
+# verify that failure exists here
+# take first half using head, get second half using tail
+/import_data$ head -50 contacts.csv | tail -25 | ./import.py --server test
+# output: Import error
+# split again
+/import_data$ head -50 contacts.cvs | tail -25 | head -13 | ./import.py --server test
+# output: Import successful
+# split again
+/import_data$ head -50 contacts.csv | tail -25 | tail -12 | head -6 | ./import.py --server test
+# output: Import error
+# split one more time
+/import_data$ head -50 contacts.csv | tail -25 | tail -12 | head -6 | head -3 | ./import.py --server test
+# output: Import error
+# look at last 3 entries, problem: comma separated file but not written between quotes
+# edit file and fix
+atom cat contacts.csv
+# run again
+/import_data$ cat contacts.csv | ./import.py --server test
+
+
+# The find_item function uses binary search to recursively locate an item in a list, returning True if found, False otherwise. Something is missing from this function. Can you spot what it is and fix it? Add debug lines where appropriate to help you narrow down the problem.
+
+def find_item(list, item):
+    # Returns True if the item is in the list, False if not.
+    if len(list) == 0:
+        return False
+    # Is the item in the center of the list?
+    middle = len(list)//2
+    if list[middle] == item:
+        return True
+    # Is the item in the first half of the list?
+    if item < list[middle]:
+        # Call the function with the first half of the list
+        return find_item(list[:middle], item)
+    else:
+        # Call the function with the second half of the list
+        return find_item(list[middle+1:], item)
+#Do not edit below this line - This code helps check your work!
+list_of_names = ["Parker", "Drew", "Cameron", "Logan", "Alex", "Chris", "Terry", "Jamie", "Jordan", "Taylor"]
+
+print(find_item(list_of_names, "Alex")) # True
+print(find_item(list_of_names, "Andrew")) # False
+print(find_item(list_of_names, "Drew")) # True
+print(find_item(list_of_names, "Jared")) # False
+
+# Fix to:
+def find_item(list, item):
+    list.sort()
+    # Returns True if the item is in the list, False if not.
+    if len(list) == 0:
+        return False
+    # Is the item in the center of the list?
+    middle = len(list)//2
+    if list[middle] == item:
+        return True
+    # Is the item in the first half of the list?
+    if item in list[:middle]:
+        # Call the function with the first half of the list
+        return find_item(list[:middle], item)
+    else:
+        # Call the function with the second half of the list
+        return find_item(list[middle+1:], item)
+    return False
+#Do not edit below this line - This code helps check your work!
+list_of_names = ["Parker", "Drew", "Cameron", "Logan", "Alex", "Chris", "Terry", "Jamie", "Jordan", "Taylor"]
+
+print(find_item(list_of_names, "Alex")) # True
+print(find_item(list_of_names, "Andrew")) # False
+print(find_item(list_of_names, "Drew")) # True
+print(find_item(list_of_names, "Jared")) # False
+
+# The binary_search function returns the position of key in the list if found, or -1 if not found. You want to make sure that it's working correctly, so you need to place debugging lines to let you know each time that the list is cut in half, whether you're on the left or the right. You do not want to print anything when the key is located.
+# For example, the command binary_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3) performs these steps:
+# It determines that the key, 3, is in the left half of the list and prints "Checking the left side". 
+# It then determines that 3 is in the right half of the new list and prints "Checking the right side".
+# Finally, it returns the value of 2, which is the position of the key in the list.
+# Add commands to the code to print out "Checking the left side" or "Checking the right side" in the appropriate places.
+
+def binary_search(list, key):
+    list.sort() # binary searh starts with a sorted list
+    left = 0 # the first value of the list
+    right = len(list) - 1 # the last value of the list
+
+    while left <= right:
+        middle = (left + right) //2
+
+        if list[middle] == key:
+            print("Middle elment")
+            return middle
+        elif list[middle] > key:
+            # add debug statement here
+            right = middle -1
+        else:
+            # add debug statement here
+            left = middle +1
+    return -1
+print(binary_search([10, 2, 9, 6, 7, 1, 5, 3, 4, 8], 1))
+
+print(binary_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))    
+
+# fix to:
+def binary_search(list, key):
+    list.sort() # binary search starts with a sorted list
+    left = 0 # the first value of the list
+    right = len(list -1 # last value of the list
+
+    while left <= right:
+        middle = (left + right)//2
+        if list[middle] == key:
+            print("Middle element")
+            return middle
+        elif list[middle] > key:
+            # add debug statement here
+            print("Checking the left side")
+            right = middle -1
+        else:
+            # add debug statement here
+            print("Checking the right side")
+            left = middle +1
+    return -1
+print(binary_search([10, 2, 9, 6, 7, 1, 5, 3, 4, 8], 1))
+
+print(binary_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))    
+
+
+# The best_search function compares linear_search and binary_search functions to locate a key in the list, returns how many steps each method took, and which method is the best for that situation. The list does not need to be sorted, as the binary_search function sorts it before proceeding (and uses one step to do so). Here, linear_search and binary_search functions both return the number of steps that it took to either locate the key or determine that it's not in the list. If the number of steps is the same for both methods (including the extra step for sorting in binary_search), then the result is a tie. Fill in the blanks to make this work.
+def linear_search(list, key):
+   #Returns the number of steps to determine if key is in the list
+
+
+
+
+   #Initialize the counter of steps
+   steps=0
+   for i, item in enumerate(list):
+       steps += 1
+       if item == key:
+           break
+   return ___
+
+
+
+
+def binary_search(list, key):
+   #Returns the number of steps to determine if key is in the list
+
+
+
+
+   #List must be sorted:
+   list.sort()
+
+
+
+
+   #The Sort was 1 step, so initialize the counter of steps to 1
+   steps=1
+
+
+
+
+   left = 0
+   right = len(list) - 1
+   while left <= right:
+       steps += 1
+       middle = (left + right) // 2
+      
+       if list[middle] == key:
+           break
+       if list[middle] > key:
+           right = middle - 1
+       if list[middle] < key:
+           left = middle + 1
+   return ___
+
+
+
+
+def best_search(list, key):
+   steps_linear = ___
+   steps_binary = ___
+   results = "Linear: " + str(steps_linear) + " steps, "
+   results += "Binary: " + str(steps_binary) + " steps. "
+   if (___):
+       results += "Best Search is Linear."
+   elif (___):
+       results += "Best Search is Binary."
+   else:
+       results += "Result is a Tie."
+
+
+
+
+   return results
+
+print(best_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1))
+#Should be: Linear: 1 steps, Binary: 4 steps. Best Search is Linear.
+
+print(best_search([10, 2, 9, 1, 7, 5, 3, 4, 6, 8], 1))
+#Should be: Linear: 4 steps, Binary: 4 steps. Result is a Tie.
+
+print(best_search([10, 9, 8, 7, 6, 5, 4, 3, 2, 1], 7))
+#Should be: Linear: 4 steps, Binary: 5 steps. Best Search is Linear.
+
+print(best_search([1, 3, 5, 7, 9, 10, 2, 4, 6, 8], 10))
+#Should be: Linear: 6 steps, Binary: 5 steps. Best Search is Binary.
+
+print(best_search([5, 1, 8, 2, 4, 10, 7, 6, 3, 9], 11))
+#Should be: Linear: 10 steps, Binary: 5 steps. Best Search is Binary.
+
+# fix to:
+def linear_search(list, key):
+    # returns the nummber of step  to determine if key is in the list
+    # intialize new counter of steps
+    steps=0
+    for i, item in enumerate(list):
+        steps+=1
+        if item == key:
+            break
+    return steps
+def binary_search(list, key):
+    # returns the number of steps to determine if the key is in the list
+    # list must be sorted
+    list.sort()
+    # the sort was 1 step, so initialize the counter of steps to 1
+    steps=1
+    left = 0
+    right = len(list) -1
+    while left <= right:
+        steps += 1
+        middle = (left + right)//2
+        if list[middle] == key:
+            break
+        if list[middle] > key:
+            right = middle -1
+        if list[middle] < key:
+            left = middle +1
+    return steps
+def best_search(list, key):
+    steps_linear = linear_search(list, key)
+    steps_binary = binary_search(list, key)
+    results = "Linear: " + str(steps_linear) + " steps, "
+    results += "Binary: " + str(steps_binary) + " steps. "
+    if (steps_linear < steps_binary):
+        results += "Best Seach is Linear."
+    elif (steps_linear > steps_binary):
+        results += "Best Sarch is Binary."
+    else:
+        results += "Result is a Tie."
+    return results
+print(best_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1))
+#Should be: Linear: 1 steps, Binary: 4 steps. Best Search is Linear.
+
+print(best_search([10, 2, 9, 1, 7, 5, 3, 4, 6, 8], 1))
+#Should be: Linear: 4 steps, Binary: 4 steps. Result is a Tie.
+
+print(best_search([10, 9, 8, 7, 6, 5, 4, 3, 2, 1], 7))
+#Should be: Linear: 4 steps, Binary: 5 steps. Best Search is Linear.
+
+print(best_search([1, 3, 5, 7, 9, 10, 2, 4, 6, 8], 10))
+#Should be: Linear: 6 steps, Binary: 5 steps. Best Search is Binary.
+
+print(best_search([5, 1, 8, 2, 4, 10, 7, 6, 3, 9], 11))
+#Should be: Linear: 10 steps, Binary: 5 steps. Best Search is Binary.
+
+# Qwiklabs: Debug Python scripts
+# navigate to scripts directory
+cd ~/scripts
+# list all files
+ls
+# output: greetings.py
+# view contents
+cat greetings.py
+# update file permissions
+sudo chmod 777 greetings.py
+# reproduce error by running file
+./greetings.py
+# enter name at prompt
+# error = can't concatenate string and integer
+# print statements that causes error
+print("hello" + name + ", your random number is " + number)
+# edit file with nano
+nano greetings.py
+# replace print statement
+print("hello " + name + ", your random number is " + str(number))
+# run
+./greetings.py
+# enter your name at prompt
+# correct output appears
+
