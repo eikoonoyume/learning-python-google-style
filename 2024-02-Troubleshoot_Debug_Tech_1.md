@@ -383,6 +383,9 @@ def find_item(list, item):
     else:
         # Call the function with the second half of the list
         return find_item(list[middle+1:], item)
+
+    return False
+    
 #Do not edit below this line - This code helps check your work!
 list_of_names = ["Parker", "Drew", "Cameron", "Logan", "Alex", "Chris", "Terry", "Jamie", "Jordan", "Taylor"]
 
@@ -454,6 +457,7 @@ def binary_search(list, key):
 
     while left <= right:
         middle = (left + right)//2
+        
         if list[middle] == key:
             print("Middle element")
             return middle
@@ -475,9 +479,6 @@ print(binary_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
 def linear_search(list, key):
    #Returns the number of steps to determine if key is in the list
 
-
-
-
    #Initialize the counter of steps
    steps=0
    for i, item in enumerate(list):
@@ -486,26 +487,14 @@ def linear_search(list, key):
            break
    return ___
 
-
-
-
 def binary_search(list, key):
    #Returns the number of steps to determine if key is in the list
-
-
-
-
+   
    #List must be sorted:
    list.sort()
 
-
-
-
    #The Sort was 1 step, so initialize the counter of steps to 1
    steps=1
-
-
-
 
    left = 0
    right = len(list) - 1
@@ -522,8 +511,6 @@ def binary_search(list, key):
    return ___
 
 
-
-
 def best_search(list, key):
    steps_linear = ___
    steps_binary = ___
@@ -535,9 +522,6 @@ def best_search(list, key):
        results += "Best Search is Binary."
    else:
        results += "Result is a Tie."
-
-
-
 
    return results
 
@@ -559,24 +543,29 @@ print(best_search([5, 1, 8, 2, 4, 10, 7, 6, 3, 9], 11))
 # fix to:
 def linear_search(list, key):
     # returns the nummber of step  to determine if key is in the list
+    
     # intialize new counter of steps
     steps=0
     for i, item in enumerate(list):
-        steps+=1
+        steps += 1
         if item == key:
             break
     return steps
+    
 def binary_search(list, key):
     # returns the number of steps to determine if the key is in the list
+    
     # list must be sorted
     list.sort()
     # the sort was 1 step, so initialize the counter of steps to 1
     steps=1
+    
     left = 0
     right = len(list) -1
     while left <= right:
         steps += 1
         middle = (left + right)//2
+        
         if list[middle] == key:
             break
         if list[middle] > key:
@@ -584,6 +573,7 @@ def binary_search(list, key):
         if list[middle] < key:
             left = middle +1
     return steps
+    
 def best_search(list, key):
     steps_linear = linear_search(list, key)
     steps_binary = binary_search(list, key)
@@ -594,7 +584,8 @@ def best_search(list, key):
     elif (steps_linear > steps_binary):
         results += "Best Sarch is Binary."
     else:
-        results += "Result is a Tie."
+        results += "Result is a Tie
+        
     return results
 print(best_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1))
 #Should be: Linear: 1 steps, Binary: 4 steps. Best Search is Linear.
