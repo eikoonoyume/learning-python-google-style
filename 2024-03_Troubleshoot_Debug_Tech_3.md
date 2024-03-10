@@ -190,3 +190,275 @@ print argv[1]
 # result = for loop was doing one iteration too many = off-by-one error (very common)
 # fix = change less than or equal sign to be strictly less than sign so that iteration stops one element before
 
+
+# Debug a Python Crash
+# check contents of file
+cd update_products/
+cat new_products.csv
+
+# execute program
+./update_products.py new_products.csv
+# output: error
+# the traceback is like like back-trace but in reverse order, the bottom is where the exception occurred
+# Key Error occurred
+# use Python debugger pdb3, pass script we want to run and any parameters needed
+pdb3 update_products.py new_products.csv
+# tell debugger to continue the execution until it finishes or crashes
+continue
+# print contents of row
+print(row)
+# BOM (Byte Order Mark) = used in UTF-16 to tell difference between a file stored using Litle-Endian and Big-Endian
+# file is in UTF-8, doesn't need BOM
+# set encoding parameter to UTF-8sig in open function, Python will then get rid of BOM
+atom update_products.py
+(find line for open function, add "encoding='utf-8-sig'"
+# save and execute
+./update_products.py new_products.csv
+
+# advanced debugging features
+-breakpoint = let code run until certain line of code is executed 
+-watchpoint = let code run until a variable or expression changes
+
+# Debugging with Print
+-print statement = helps you figure out what is going on in code
+-tell print to send messages to screen as program executes to help find out how far it's getting before crash
+-tell print to print value of certain variables as program runs
+-add print statement to top of a loop that doesn't seem to execute correctly
+
+# division function for two numbers
+def divide(numerator, denominator):
+  return numerator / denominator
+# dividing by zero = ZeroDivisionError
+# add print statement
+def divide(numerator, denominator)
+  print("dividing {} by {}".format(numerator, denominator))
+  return numerator / denominator
+# you'll see output printed before error
+
+# LocationValueError
+# retrieve web page and print contents
+import urllib3
+def get_web_page(url):
+  http = urllib3.PoolManager()
+  response = http.request("GET", url)
+  print(response.data.decode("utf-8"))
+# if URL is missing, you'll see LocationValueError
+# print statement to see what URL is before making the call
+import urllib3
+def get_web_page(url):
+  http = urllib3.PoolManager()
+
+  print("Retrieving URL:", url)
+  response = http.request("GET", url)
+
+  print("HTTP response code:", response.status, response.reason)
+  print(response.data.decode("utf-8"))
+# try again
+get_web_page("http://google.com")Retrieving URL: http://google.co HTTP response code : 200 ok
+# when in doubt, add print statements, take them out later when done debugging
+
+# Debugging with Assert
+-assertion = logical test that developers use as a sanity check when writing code
+-in Python, use assert statement
+-the condition you include should always be TRUE
+-if condition is FALSE, use this info as main indicator that program has a bug
+-automatically, it will terminate execution of program and display error message
+ a = 3 + 4
+ assert a == 7
+
+ # if function is called with empty string instead of filename, it will return FileNotFoundError
+ def read_file_and_do_something(filename):
+   assert filename != ""
+   with open(filename, "r") as fp:
+   ...
+# assert statement produces nothing
+
+-assertions prevent code from continuing to execute when additional input would cause further errors
+-use them to create error messages that are easy to understand and user-friendly
+def read_file_and_do_something(filename):
+  assert filename != "", "You must specify a filename!"
+  with open(filename, "r") as fp:
+  ...
+# error message is not clear and easy to understand
+
+# Try and Catch Debugging
+-"try and catch" = common programming paradigm found in many programming languages (not Python)
+-handles runtime errors (or "exceptions") without crashing program
+-Python version = "try" and "except" blocks
+-use when you anticipate this segment of code might produce error
+-follow try block with one or more except blocks to catch specific exceptions
+try:
+  # code that might raise exception
+except SomeExceptionType
+  # handle the exception
+
+# ZeroDivisionError
+try:
+  # code that might raise exception
+  result = 10 / 0
+except ZeroDivisionError:
+  print("Oop! You tried to divide by zero.")
+
+-Benefits: identify problems in code, gain insight using messages, fail gracefully without crashing, log errors in Python's logging module
+
+def calculate_average(numbers):
+  return sum(numbers) / len(numbers)
+# if empty list is passed, ZeroDivisonError is raised, use "try" and "except"
+def calculate_average(numbers):
+  try:
+    return sum(numbers) / len(numbers)
+  except ZeroDivisionError:
+    print("The list is empty. Cannot calculate the average.")
+    return None
+
+# Get Detailed Info
+-exceptions in Python = OBJECTS
+-print or log exception object itself to provide detailed info about issue
+-use "raise" keyword within except blockis to raise custom/built-in exceptions with more descriptive messages
+-define own custom exceptions to provide more specific error feedback
+class InvalidInputError(Exception):
+  pass
+class EmptyInputError(Exception):
+  pass
+def calculate_average(numbers):
+  try:
+    return sum(numbers) / len(numbers)
+  except TypeError:
+    raise InvalidInputError(f"Expected a list or tuple, but got {type(numbers)}")
+  except ZeroDivisionError:
+    raise EmptyInputError("The list is empty. Cannot calculate the average.")
+  finally:
+    print("Execution of calculate_average function completed.")
+# InvalidInputError and EmptyInputError = custom exceptions
+# finally clause = specify actions that must be executed regardless of whether exception was raised or not
+
+# Warning
+-"try" and "except" blocks aren't traditional "debugging"
+-they provide framework to handle and understand and resolve errors in controlled and informed manner
+-use it judiciously
+-overusing --> swallowing exceptions (erros are caught but not adequately handled or logged, leading to SILENT FAILURES)
+
+# Python Logging Module
+-Python logging module = built-in library designed to provide flexible framework for creating log messages
+-provides way to configure and capture log messages at different severity levels
+-categorize error messages based on severity: ex. DEBUG, INFO, WARNING, ERROR, CRITICAL 
+# import first
+import logging
+# default levels = WARNING and above
+logging.warning('This is a warning message')
+logging.error('This is an error message')
+# set logging level to DEBUG to capture all messages using this code
+logging.basicConfig(level=logging.DEBUG)
+logging.debug('This is a debug message')
+# configure logging to save messages to file to keep record of log messages
+logging.basicConfig(filename='app.log', level=logging.DEBUG)
+logging.info('This message will be written to app.log')
+# customize format of log message to include info like timestamp, log level, message
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.error('This is an error with a custom format')
+
+# example:
+def user_login(username, password):
+  logging.info(f"Attempting to log in user: {username}")
+  # ... (some code for authentication)
+  if authentication_failed:
+    logging.error(f"Login failed for user: {username}")
+  else:
+    logging.info(f"Successfully logged in user: {usrename}")
+# conclusion: this isn't the preferred log file method. Real-world use prefers HANDLERS
+# Handlers = advanced ways to manage and route logs
+
+# Using Python DeBugger (pdb)
+-Step 1: set breakpoint where you suspect issue might be
+-breakpoint = a spot in code that tells pdb to pause your code at the specific line
+pdb.set_trace()
+# prompt appears: (pdb) [ ]
+
+import pdb
+
+def add_numbers(a, b):
+  pdb.set_trace() # this sets breakpoint
+  result = a + b
+  return result
+
+print(add_numbers(3, 4))
+# execution pauses at pdb.set_trace()
+# interactive debugger session appears
+-Step 2: query variable and see values
+-use n (next) and p (print) to show update
+-a = show arguments of current function
+-b = manually set persistent breakpoint
+-s = execute current line ans stop at first possible occasion
+-c = resume normal exectution until next breakpoint
+-pp = pretty-print value of expression
+-q = exit debugger, terminate program
+-r = continue execution until current function returns
+-tbreak = manually set temporary breakpoint
+-! = prefix to execute arbitrary Python command in current environment
+
+-Step 3: inspect variables
+-type "p" and variable name to see current value
+ex. p sentiment_score
+
+-Step 4: change value of variable directly in debugger
+ex. !sentiment_score = 0.9
+-use "a" or directly proble value with "p<value name>" to confirm changes
+
+-Step 5: exit debugger with "q"
+
+-use pdb to inspect program state at time of crash
+python -m pdb your_script.py
+
+# Postmortems
+-postmortems = documents that describe details of incidence to help us learn from our mistakes
+-goal: learn from what happened to prevent same issue
+-document: what happened and when, impact of issue, who was affected, why it happened, how it was diagnosed, short term remediation and long term remediation (how it was fixed), figure out what we can do to avoid same event in future
+-make sure to include: highlights of root cause, impact, what needs to be done to prevent issue, and what went well
+-language: simple and concise, short sentences, basic language, only important info (who, what, when, where, why), stick to the facts, list everything necessary to understand overall picture
+-avoid: conjecture, blame, glossing over necessary details
+-be honest and accurate
+
+# Qwiklabs: fix errors in Python scripts
+# run script
+cd /
+python3 /usr/bin/infrastructure
+
+# output: ImportError
+# ImportError = raised when import statement has trouble importing specific module
+# module matplotlib wasn't foud, import this module
+# install pip3 Python package installer
+sudo apt install python3-pip -y
+# install matplotlib python library
+pip3 install matplotlib
+
+# matplotlib = plotting library for Python and NumPy(numerical mathematics extension), provides object-oriented API for embedding plots into applications using GUI toolkits, it's a visualization library for 2D plots of arrays
+
+# run script
+python3 /usr/bin/infrastructure
+# output: NoFileError
+# debug time, navigate to working directory, see if data.csv file exists
+cd ~
+ls
+# output: data.bak
+# change extension
+mv data.bak data.csv
+# navigate back to root directory, run script
+cd /
+python3 /usr/bin/infrastructure
+# output: MissingColumnError
+# column for "company" is missing
+
+# check data.csv for columns
+cat ~/data.csv
+# output: firstname,surname,,job title
+# time to add column name in between the commas, grant permission to data.csv file
+sudo chmod 777 ~/data.csv
+# use nano editor
+nano ~/data.csv
+# add column name in between the commas, save and exit
+# run script
+python3 /usr/bin/infrastructure
+# finished
+
+
+
